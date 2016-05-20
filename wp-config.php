@@ -16,13 +16,13 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'genesedb');
+define('DB_NAME', 'geneseco_genesetheme');
 
 /** MySQL database username */
-define('DB_USER', 'genesetheme');
+define('DB_USER', 'geneseco_geneset');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'Everest01');
+define('DB_PASSWORD', 'JPL_$i#JKDbH');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
@@ -59,7 +59,7 @@ define('NONCE_SALT',       'e`Gtq6-59P7]kxzj!&{[KPp0^F-(AWLjuqum4fFl]<nUJu@xkM#y
  * You can have multiple installations in one database if you give each a unique
  * prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = 'wp_';
+$table_prefix  = 'gth_';
 
 /**
  * For developers: WordPress debugging mode.
@@ -68,7 +68,7 @@ $table_prefix  = 'wp_';
  * It is strongly recommended that plugin and theme developers use WP_DEBUG
  * in their development environments.
  */
-define('WP_DEBUG', false);
+define('WP_DEBUG', true);
 
 /* That's all, stop editing! Happy blogging. */
 

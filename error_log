@@ -1,0 +1,2 @@
+[20-May-2016 09:53:42 UTC] PHP Warning:  mysql_connect(): Access denied for user 'geneseco_genesetheme'@'localhost' (using password: YES) in /home2/geneseco/public_html/projects/genesetheme/wp-includes/wp-db.php on line 1416
+[20-May-2016 09:55:40 UTC] PHP Warning:  mysql_connect(): Access denied for user 'geneseco_genesetheme'@'localhost' (using password: YES) in /home2/geneseco/public_html/projects/genesetheme/wp-includes/wp-db.php on line 1416
