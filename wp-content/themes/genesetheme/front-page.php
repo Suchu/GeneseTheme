@@ -52,7 +52,7 @@ get_header(); ?>
 		
 		
         
-        </section> <small><?php the_post_thumbnail( 'small' ); ?></small>
+        </section> <small><?php the_post_thumbnail( 'thumbnail' ); ?></small>
 
        
         

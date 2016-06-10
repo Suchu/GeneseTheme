@@ -154,6 +154,10 @@ Version: 1.0
 	  padding: 8px 10px;
 	  font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
+	  .mce-widget .mce-btn button{
+	  	background-color: black !important;
+	  }
+
 	.button:hover,
 	button:hover,
 	input[type="submit"]:hover,
@@ -267,8 +271,3 @@ text-align: right;
 }
 
 
-/*custom*/
-img{
-	width: 75% !important;
-    height: 100% !important;
-}

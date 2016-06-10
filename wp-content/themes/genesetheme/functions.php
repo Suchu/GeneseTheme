@@ -6,7 +6,8 @@ function wpdocs_genesetheme_scripts() {
     wp_enqueue_style( 'skeleton', get_stylesheet_uri(). '/css/skeleton.css' );
     wp_enqueue_style( 'layout', get_stylesheet_uri(). '/css/layout.css' );
      wp_enqueue_style( 'editor-style', get_stylesheet_uri(). '/css/editor-style.css' );
-    wp_enqueue_style("fontawesome", 'http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css');
+    wp_enqueue_style("fontawesome", 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
+
 
     wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/scripts.js', array(), '1.0.0', true );
     wp_enqueue_script( 'shortcode', get_template_directory_uri() . '/js/mce-button.js', array(), '1.0.0', true );
@@ -78,10 +79,10 @@ function genesetheme_widgets_init() {
 	register_sidebar(array(
 'name' => __( 'Featured Text', 'genesetheme' ),
 'id'            => 'featured-1',
-'before_widget' => '<div id="%1$s" class="widget %2$s">',
+'before_widget' => '',
 'after_widget' => '<hr />',
-'before_title' => '<h2>',
-'after_title' => '</h2>',
+'before_title' => '',
+'after_title' => '',
 ));
 
 
@@ -183,6 +184,13 @@ class wf_widget extends WP_Widget {
             <textarea class="widefat" id="<?php echo $this->get_field_id('textarea'); ?>" name="<?php echo $this->get_field_name('textarea'); ?>"><?php echo $textarea; ?></textarea>
             </p>
 
+             <p>
+            <label for="<?php echo $this->get_field_id('icon'); ?>"><?php _e('Featured Icon:', 'wf_widget'); ?></label>
+
+            <input class="widefat" id="<?php echo $this->get_field_id('icon'); ?>" name="<?php echo $this->get_field_name('icon'); ?>" type="text" value="<?php echo $icon; ?>" />
+
+            </p>
+
 
              
 <?php
@@ -196,7 +204,7 @@ class wf_widget extends WP_Widget {
       // Fields
       $instance['title'] = strip_tags($new_instance['title']);
       $instance['textarea'] = strip_tags($new_instance['textarea']);
-      // $instance['icon'] = strip_tags($new_instance['icon']);
+      $instance['icon'] = strip_tags($new_instance['icon']);
      return $instance;
 
      
@@ -222,19 +230,29 @@ class wf_widget extends WP_Widget {
    //    echo '</div>';
    
    //  echo'</section>';
-
-   echo '<div class="one-third column>';
+    
+  
+   // echo $before_widget;
+   // echo '<div class="one-third column>';
    
-    echo $before_widget;
-
+   
     
+   if ( is_front_page('') )
     
+    echo '<div class="one-third column">';
  
    // Check if title is set
-   if ( $title ) { ?>
-      <h3><?php echo $before_title . $title . $after_title;?> </h3>
-      <?php
+   if ( $title  &&  $textarea) { 
+   ?>
+      <h3><i class = "<?php echo $icon; ?>" aria-hidden="true"></i>
+      <?php echo $before_title . $title . $after_title; ?> </h3>
+      <?php 
+      echo '<p >'.$textarea.'</p>';
+      
+      
    }
+   echo '</div>';
+   
    
 
    // Check if text is set
@@ -243,19 +261,21 @@ class wf_widget extends WP_Widget {
    // }
 
    // Check if textarea is set
-   if( $textarea ) {
-      echo '<p >'.$textarea.'</p>';
-   }
    
    
-   // echo $after_widget;
-   echo '</div>';
+  
+   
+    // echo '</div>';
+    // echo $after_widget;
    
    
 
     }
 
 }
+
+
+// for slider
 if( !function_exists( 'set_revslider_as_theme') ):
 
 function plugin_notice() {
@@ -281,25 +301,29 @@ add_shortcode("Formatted", "FormattedText");
 
 
 
-add_action('init', 'shortcode_buttons');
 
-// / Hooks your functions into the correct filters
-function shortcode_buttons() {
 
-        add_filter( 'mce_external_plugins', 'formatted_add_buttons' );
-        add_filter( 'mce_buttons', 'formatted_register_buttons' );
-    
-}
+/*
+Plugin Name: Visual Editor Buttons for shortcode
+Plugin URI: #
+Description: Adds a button to visual editor.
+Author: Genese
+*/
 
-// Declare script for new button
-function formatted_add_buttons( $plugin_array ) {
-
-    $plugin_array['formatted'] = get_template_directory_uri() .'/js/mce-button.js';
+function enqueue_plugin_scripts($plugin_array)
+{
+    //enqueue TinyMCE plugin script with its ID.
+    $plugin_array["shortcode_button_plugin"] =  get_template_directory_uri() .'/js/mce-button.js';
     return $plugin_array;
 }
-// Register new button in the editor
-function formatted_register_buttons( $buttons ) {
 
-    array_push( $buttons, 'shortcode_buttons' );
+add_filter("mce_external_plugins", "enqueue_plugin_scripts");
+
+function register_buttons_editor($buttons)
+{
+    //register buttons with their id.
+    array_push($buttons, "shortcode");
     return $buttons;
 }
+
+add_filter("mce_buttons", "register_buttons_editor");
