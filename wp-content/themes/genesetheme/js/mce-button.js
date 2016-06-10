@@ -1,18 +1,19 @@
-(function() {
-    tinymce.PluginManager.add('shortcode_buttons', function( editor, url ) {
-        editor.addButton('shortcode_buttons', {
-            text: 'Formatted Text',
-            icon: false,
-            onclick: function() {
-          		
-            	var url =window.location.origin+'/genesetheme/wp-content/themes/genesetheme/functions.php';
-            	data = {'action':'FormattedText'};
-            	jQuery.get(url, data, function(response) {editor.insertContent(response.FormattedText())});
-
-                
-            }
-
-
-        });
+( function() {
+    tinymce.create( 'tinymce.plugins.shortcode_button_plugin', {
+        init: function( ed, url ) {
+            ed.addButton( 'shortcode', {
+                title: 'Formatted Text',
+                text:'Formatted Text',
+               
+                onclick: function() {
+                    // text = prompt( "Enter text", "" );
+                    ed.execCommand( 'mceInsertContent', false, '[Formatted][/Formatted]' );
+                }
+            });
+        },
+        createControl: function( n, cm ) { return null; },
     });
+    tinymce.PluginManager.add( 'shortcode_button_plugin', tinymce.plugins.shortcode_button_plugin );
 })();
+
+
