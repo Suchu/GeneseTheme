@@ -1,20 +1,54 @@
 <?php
+
 // css and scripts
 
 function wpdocs_genesetheme_scripts() {
-    wp_enqueue_style( 'style', get_stylesheet_uri(). '/style.css type = "text/css/' );
-    wp_enqueue_style( 'skeleton', get_stylesheet_uri(). '/css/skeleton.css' );
-    wp_enqueue_style( 'layout', get_stylesheet_uri(). '/css/layout.css' );
-     wp_enqueue_style( 'editor-style', get_stylesheet_uri(). '/css/editor-style.css' );
+    // wp_enqueue_style( 'style', get_stylesheet_uri(). '/style.css type = "text/css/' );
+    // wp_enqueue_style( 'skeleton', get_stylesheet_uri(). '/css/skeleton.css' );
+    // wp_enqueue_style( 'layout', get_stylesheet_uri(). '/css/layout.css' );
+    // wp_enqueue_style( 'editor-style', get_stylesheet_uri(). '/css/editor-style.css' );
     wp_enqueue_style("fontawesome", 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
 
 
-    wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/scripts.js', array(), '1.0.0', true );
-    wp_enqueue_script( 'shortcode', get_template_directory_uri() . '/js/mce-button.js', array(), '1.0.0', true );
-    wp_enqueue_script('javascript', 'http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js', array(), null, true);
-
+    wp_enqueue_script('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js', array(), null, true);
+    wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/scripts.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'upload-logo', get_template_directory_uri() . '/js/upload-logo.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'shortcode', get_template_directory_uri() . '/js/mce-button.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'ace_code_highlighter_js', get_template_directory_uri() . '/ace/ace.js', '', '1.0.0', true );
+    wp_enqueue_script( 'ace_mode_js', get_template_directory_uri() . '/ace/mode-css.js', array( 'ace_code_highlighter_js' ), '1.0.0', true );
+    wp_enqueue_script( 'ace_worker_js', get_template_directory_uri() . '/ace/worker-css.js', array( 'ace_code_highlighter_js' ), '1.0.0', true );
+    wp_enqueue_script( 'custom_css_js', get_template_directory_uri() . '/custom-css.js', array( 'jquery', 'ace_code_highlighter_js' ), '1.0.0', true );
+    
 }
-add_action( 'wp_enqueue_scripts', 'wpdocs_genesetheme_scripts' );
+
+
+
+add_action( 'admin_enqueue_scripts', 'wpdocs_genesetheme_scripts' );
+
+
+
+add_action ( 'admin_enqueue_scripts', function () {
+        if (is_admin ())
+            wp_enqueue_media ();
+    } );
+
+// for css
+
+add_action('wp_head', 'display_custom_css');
+function display_custom_css() {
+$custom_css = get_option( 'custom_css' );
+if ( ! empty( $custom_css ) ) { ?>
+<style type="text/css">
+    <?php
+    echo '/* Custom CSS */' . "\n";
+    echo $custom_css . "\n";
+    ?>
+    
+</style>
+    <?php
+  }
+}
+
 
 
 
@@ -132,147 +166,9 @@ register_sidebar(array(
 
 
 //creating widget for featured text
+include( get_template_directory() . '/widgets.php' );
+// end of featured text widget
 
-class wf_widget extends WP_Widget {
-
-    // Constructor, to initiate the widget
-	function __construct() {
- 
-
-	parent::__construct(
-         
-        // base ID of the widget
-        'wf_widget',
-         
-        // name of the widget
-        __('Featured', 'genesetheme' ),
-         
-        // widget options
-        array (
-            'description' => __( 'Simple widget for featured texts in home.', 'genesetheme' )
-        )
-         
-    );
-
-    }
-
-// widget form creation, in the administration
-        function form( $instance ) {
-
-            // Check values
-            if ( $instance) {
-                $title = esc_attr($instance['title']);
-                $icon = esc_attr($instance['icon']);
-                $textarea = esc_textarea($instance['textarea']);
-            } else {
-                $title = '';
-                $icon = '';
-                $textarea = '';
-            }
-
-     
-            // markup for form ?>
-            <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Featured Title:', 'wf_widget'); ?></label>
-
-            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
-
-            </p>
-
-            <p>
-            <label for="<?php echo $this->get_field_id('textarea'); ?>"><?php _e('Featured text:', 'wf_widget'); ?></label>
-            <textarea class="widefat" id="<?php echo $this->get_field_id('textarea'); ?>" name="<?php echo $this->get_field_name('textarea'); ?>"><?php echo $textarea; ?></textarea>
-            </p>
-
-             <p>
-            <label for="<?php echo $this->get_field_id('icon'); ?>"><?php _e('Featured Icon:', 'wf_widget'); ?></label>
-
-            <input class="widefat" id="<?php echo $this->get_field_id('icon'); ?>" name="<?php echo $this->get_field_name('icon'); ?>" type="text" value="<?php echo $icon; ?>" />
-
-            </p>
-
-
-             
-<?php
-        }
-
-// widget update: save widget data during edition
-  function update( $new_instance, $old_instance ) {
- 
-         $instance = $old_instance;
-
-      // Fields
-      $instance['title'] = strip_tags($new_instance['title']);
-      $instance['textarea'] = strip_tags($new_instance['textarea']);
-      $instance['icon'] = strip_tags($new_instance['icon']);
-     return $instance;
-
-     
-    }
-
-    // widget display, front-end
-    function widget($args, $instance) {
-        extract( $args );
-   // these are the widget options
-   $title = apply_filters('widget_title', $instance['title']);
-   $icon = $instance['icon'];
-   $textarea = $instance['textarea'];
-  
-   // Display the widget
-   // echo'<section class="container">';
-
-   //    echo '<div class="one-third column>';
-   //    echo "<h3>hello</h3>";
-   //    echo '</div>';
-
-   //    echo '<div class="one-third column>';
-   //    echo '<h3>hello1</h3>';
-   //    echo '</div>';
-   
-   //  echo'</section>';
-    
-  
-   // echo $before_widget;
-   // echo '<div class="one-third column>';
-   
-   
-    
-   if ( is_front_page('') )
-    
-    echo '<div class="one-third column">';
- 
-   // Check if title is set
-   if ( $title  &&  $textarea) { 
-   ?>
-      <h3><i class = "<?php echo $icon; ?>" aria-hidden="true"></i>
-      <?php echo $before_title . $title . $after_title; ?> </h3>
-      <?php 
-      echo '<p >'.$textarea.'</p>';
-      
-      
-   }
-   echo '</div>';
-   
-   
-
-   // Check if text is set
-   // if( $text ) {
-   //    echo '<p class="wp_widget_plugin_text">'.$text.'</p>';
-   // }
-
-   // Check if textarea is set
-   
-   
-  
-   
-    // echo '</div>';
-    // echo $after_widget;
-   
-   
-
-    }
-
-}
 
 
 // for slider
@@ -289,41 +185,43 @@ add_action( 'admin_notices', 'plugin_notice' );
 endif;
 
 
-// for shortcode in visual editor in admin
-
-function FormattedText($atts, $content = null ) {
-    return '<div class="tagline"><p>'.$content.'</p></div><hr>';
-}
-add_shortcode("Formatted", "FormattedText");
+// for shortcode in visual editor in admin (Formatted Plugin)
+include( get_template_directory() . '/plugins/visual-editor-buttons.php' );
+// end formatted plugin
 
 
 
-
-
-
-
-
-/*
-Plugin Name: Visual Editor Buttons for shortcode
-Plugin URI: #
-Description: Adds a button to visual editor.
-Author: Genese
-*/
-
-function enqueue_plugin_scripts($plugin_array)
-{
-    //enqueue TinyMCE plugin script with its ID.
-    $plugin_array["shortcode_button_plugin"] =  get_template_directory_uri() .'/js/mce-button.js';
-    return $plugin_array;
-}
-
-add_filter("mce_external_plugins", "enqueue_plugin_scripts");
-
-function register_buttons_editor($buttons)
-{
-    //register buttons with their id.
-    array_push($buttons, "shortcode");
-    return $buttons;
+// for limiting the Post Excerpt Length Using Number Of Words in Home page
+//  function excerpt($limit) {
+//   $excerpt = explode(' ', get_the_excerpt(), $limit);
+//   if (count($excerpt)>=$limit) {
+//     array_pop($excerpt);
+//     $excerpt = implode(" ",$excerpt).'...';
+//   } else {
+//     $excerpt = implode(" ",$excerpt);
+//   } 
+//   $excerpt = preg_replace('`\[[^\]]*\]`','',$excerpt);
+//   return $excerpt;
+// }
+ 
+function content($limit) {
+  $content = explode(' ', get_the_content(), $limit);
+  if (count($content)>=$limit) {
+    array_pop($content);
+    $permalink = get_permalink($post->ID);
+    $content = implode(" ",$content).'...<a href="'.$permalink.'">Read more</a>';
+  } else {
+    $content = implode(" ",$content);
+  } 
+  $content = preg_replace('/\[.+\]/','', $content);
+  $content = apply_filters('the_content', $content); 
+  $content = str_replace(']]>', ']]&gt;', $content);
+  return $content;
 }
 
-add_filter("mce_buttons", "register_buttons_editor");
+// Add and manage Theme Option
+include( get_template_directory() . '/theme-option.php' );
+// end theme option
+
+
+
