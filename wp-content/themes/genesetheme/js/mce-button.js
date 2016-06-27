@@ -7,7 +7,7 @@
                
                 onclick: function() {
                     // text = prompt( "Enter text", "" );
-                    ed.execCommand( 'mceInsertContent', false, '[Formatted][/Formatted]' );
+                    ed.execCommand( 'mceInsertContent', false, '[Formatted]Content[/Formatted]' );
                 }
             });
         },

@@ -104,6 +104,7 @@
 
         .container .one-third.column                { width: 236px; }
         .container .two-thirds.column               { width: 492px; }
+        
 
         /* Offsets */
         .container .offset-by-one                   { padding-left: 48px; }

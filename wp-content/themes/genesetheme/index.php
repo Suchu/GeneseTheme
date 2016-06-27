@@ -24,7 +24,7 @@ get_header(); ?>
         <p><?php the_post_thumbnail('thumbnail'); ?> </p>
         <?php
       }  ?>
-        <?php the_content();
+        <?php echo content(30);
 
    endwhile; //while ends
    posts_nav_link();

@@ -19,7 +19,7 @@
 	<!-- CSS
   ================================================== -->
 	<link rel="stylesheet" href="<?php bloginfo('stylesheet_url');?> type = "text/css />
-	<link rel="stylesheet" href="<?php echo get_template_directory_uri ();?>/style.css type = "text/css />
+	<link rel="stylesheet" href="<?php echo get_template_directory_uri ();?>/style.css" >
 	<link rel="stylesheet" href="<?php echo get_template_directory_uri();?>/css/skeleton.css">
 	<link rel="stylesheet" href="<?php echo get_template_directory_uri();?>/css/layout.css">
     <link rel="stylesheet" href="<?php echo get_template_directory_uri();?>/css/flexslider.css">
@@ -45,6 +45,8 @@
 	<link rel="apple-touch-icon" sizes="114x114" href="<?php echo get_template_directory_uri() ?>/images/apple-touch-icon-114x114.png">
 	<?php wp_head(); ?>
 	
+
+
 </head>
 <body class="wrap">
 
@@ -55,11 +57,18 @@
 
 	<header id="header" class="site-header" role="banner">
     <div id="header-inner" class="container sixteen columns over">
-    <hgroup class="one-third column alpha">
-    <h1 id="site-title" class="site-title">
-    <a href="index.html" id="logo"><img src="images/icebrrrg-logo.png" alt="Icebrrrg logo" height="63" width="157" /></a>
-    </h1>
-    </hgroup>
+    	<hgroup class="one-third column alpha">
+    	<h1 id="site-title" class="site-title">
+   		<?php if ( get_option( 'logo_link' ) ) : ?>
+	   
+ 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" id="logo" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
+ 
+    		<img src="<?php echo get_option( 'logo_link' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?> height="63" width="157" /">
+ 
+    		</a>
+    	<?php endif; ?>
+    	</h1>
+    	</hgroup>
     <nav id="main-nav" class="two thirds column omega">
     
     <!-- <li id="menu-item-1" class="current"> -->

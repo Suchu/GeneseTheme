@@ -44,7 +44,8 @@ get_header(); ?>
 			<div class="one-third column">
 
 			<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-			<p> <?php the_content(); ?> </p>
+			<?php the_post_thumbnail( array(250,210) ); ?>
+			<p> <?php echo content(14); ?> </p>
 
 			</div>
 			<?php endwhile; ?>
@@ -52,7 +53,7 @@ get_header(); ?>
 		
 		
         
-        </section> <small><?php the_post_thumbnail( 'thumbnail' ); ?></small>
+        </section> 
 
        
         
